@@ -1,0 +1,70 @@
+TITLE
+
+*Set the defaults for precision simulations
+DEFAULTS                                                              PRECISIO
+*Define the beam characteristics
+!@scale=30
+BEAM          -0.005                                                  PROTON
+*Define the beam position
+BEAMPOS            0         0      -1.6        -1
+GEOBEGIN                                                              COMBNAME
+    0    0          
+*Black body
+SPH blkbody    0.0 0.0 0.0 100000.0
+*Void sphere
+SPH void       0 0 0 10000.0
+*Cylindrical target
+RCC target     -1.2 0 -1.54 -0.1 0 0 1.0
+*Cylindrical target
+RCC target1    -0.7 -0.6 -0.7 0.15 0 0.2598076211353 1.6911325286277
+RPP Q6         -3.5 2.0 -5.0 4.0 -5.0 5.0
+RPP Q7         -1.0 0.4 -0.8 1.0 -3.0 -1.5
+RPP Q8         -1.0005 -1.0 -0.8 1.0 -3.0 -1.5
+END
+*Black hole
+BLKBODY      5 +blkbody -void
+#if 0
+*Target
+TARGET       5 +target
+#endif
+AR           5 +void +Q6 -target -target1 -Q7 -Q8
+VACUUM       5 +void +Q6 +Q7 -Q8
+ALVO         5 +void +target +Q6
+DETECTOR     5 +void +target1 +Q6
+JANELA       5 +void +Q6 +Q8 -Q7
+VOID         5 +void -target -target1 -Q6 -Q7 -Q8
+END
+GEOEND
+MATERIAL          24                7.18                              CHROMIUM
+MATERIAL          25                7.21                              MANGANES
+MATERIAL          15                1.82                              PHOSPHO
+MATERIAL          16                2.07                              SULFUR
+*Steel316LN
+*Stainless steel AISI316LN
+MATERIAL                             7.8                              SS316LN
+COMPOUND    -0.67145      IRON    -0.185  CHROMIUM   -0.1125    NICKELSS316LN
+COMPOUND       -0.02  MANGANES     -0.01   SILICON  -0.00045   PHOSPHOSS316LN
+COMPOUND     -0.0003    SULFUR   -0.0003    CARBON                    SS316LN
+*..+....1....+....2....+....3....+....4....+....5....+....6....+....7..
+ASSIGNMA    BLCKHOLE   BLKBODY
+ASSIGNMA         AIR        AR
+ASSIGNMA      VACUUM    VACUUM
+ASSIGNMA      COPPER      ALVO
+ASSIGNMA     SILICON  DETECTOR
+ASSIGNMA    ALUMINUM    JANELA
+ASSIGNMA      VACUUM      VOID
+EMFCUT        -1E-06      1E-7      1E-5    COPPER                    PROD-CUT
+EMFCUT        -1E-06      1E-7                  AR  DETECTOR
+SCORE         PHOTON    ENERGY
+*USERDUMP         100        21         0         1                    DUMP1
+*USRBIN            10    PROTON       -23       3.5       5.2         8bin4
+*USRBIN          -3.5        -5        -8       100         1       100 &
+USRBIN            10    PHOTON       -24         2         4         5bin5
+USRBIN          -3.6        -5        -5       100       100       100 &
+USRBDX           101    PHOTON       -32        AR  DETECTOR          detec9
+USRBDX         20E-6      1E-6       200                               &
+*Set the random number seed
+RANDOMIZ          1.       13.
+*Set the number of primary histories to be simulated in the run
+START      124200000
+STOP
